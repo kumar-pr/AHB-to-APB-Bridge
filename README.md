@@ -10,3 +10,82 @@ bridge in Verilog. Designed to interface a high-bandwidth AHB
 master with low-power APB peripherals.
 
 > Files and documentation being added progressively.
+
+
+---
+
+## The Problem
+
+Modern SoCs use multiple bus standards simultaneously. The CPU 
+runs on AHB — fast, pipelined, high bandwidth. Peripherals like 
+UART, GPIO, and SPI run on APB — simple, low-power, two-cycle 
+handshake. They cannot communicate directly. This bridge 
+translates between them.
+
+---
+
+## AHB Slave Interface (`ahb_slave_interface.v`)
+
+AHB is pipelined — the address of transfer N arrives one clock 
+cycle before the data of transfer N. APB needs both simultaneously.
+
+This module resolves the mismatch using a 2-stage pipeline:
+
+haddr  ──► [haddr1]  ──► [haddr2]  ──► APB
+
+hwdata ──► [hwdata1] ──► [hwdata2] ──► APB
+
+hwrite ──► [hwritereg] ──► [hwritereg1] ──► APB
+
+
+
+
+Also generates:
+- `valid` — confirms a real transfer is occurring
+- `tempselx` — one-hot peripheral select decoded from address
+
+### Address Map
+
+| Slave | Address Range | `tempselx` |
+|---|---|---|
+| Slave 1 | `0x8000_0000` – `0x83FF_FFFF` | `3'b001` |
+| Slave 2 | `0x8400_0000` – `0x87FF_FFFF` | `3'b010` |
+| Slave 3 | `0x8800_0000` – `0x8BFF_FFFF` | `3'b100` |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
