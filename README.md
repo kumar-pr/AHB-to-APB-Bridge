@@ -55,7 +55,30 @@ Also generates:
 
 
 
+---
 
+## APB Controller (`apb_controller.v`)
+
+An 8-state Mealy FSM that drives the APB two-phase handshake:
+
+- **SETUP phase**: `psel=1`, `penable=0`
+- **ENABLE phase**: `psel=1`, `penable=1` ← transfer happens here
+
+Also drives `hreadyout` low to stall the AHB master while 
+the slower APB transfer completes.
+
+### FSM States
+
+| State | Encoding | Description |
+|---|---|---|
+| `idle` | 000 | Waiting for valid transfer |
+| `read` | 001 | APB setup cycle for read |
+| `renable` | 010 | APB enable cycle for read |
+| `wwait` | 011 | Capture write address and data |
+| `write` | 100 | APB setup cycle for write |
+| `wenable` | 101 | APB enable cycle for write |
+| `writep` | 110 | Pipelined write setup (burst) |
+| `wenablep` | 111 | Pipelined write enable (burst) |
 
 
 
