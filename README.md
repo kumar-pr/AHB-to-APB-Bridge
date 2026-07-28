@@ -81,7 +81,23 @@ the slower APB transfer completes.
 | `wenablep` | 111 | Pipelined write enable (burst) |
 
 
+---
 
+## APB Interface (`apb_interface.v`)
+
+Drives the final APB output signals to the peripheral and 
+generates read data for simulation. When a read transfer is 
+active (pwrite=0, penable=1, psel active), it returns a 
+random value simulating a peripheral response.
+
+| Signal | Direction | Description |
+|---|---|---|
+| `pwrite` | input | Write control from controller |
+| `penable` | input | Enable signal from controller |
+| `psel` | input | Peripheral select from controller |
+| `paddr` | input | Address to peripheral |
+| `pwdata` | input | Write data to peripheral |
+| `prdata` | output | Read data returned to bridge |
 
 
 
