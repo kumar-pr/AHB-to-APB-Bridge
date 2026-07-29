@@ -100,7 +100,27 @@ random value simulating a peripheral response.
 | `prdata` | output | Read data returned to bridge |
 
 
+---
 
+## Bridge Top (`bridge_top.v`)
+
+Top-level wrapper that connects the AHB Slave Interface and 
+APB Controller together. All internal wires between the two 
+sub-modules are declared here.
+
+```
+AHB Master
+    │
+    ▼
+ahb_slave_interface (A1)
+    │
+    │  haddr1/2, hwdata1/2, hwritereg, valid, tempselx
+    ▼
+apb_controller (A2)
+    │
+    ▼
+APB Peripherals
+```
 
 
 
