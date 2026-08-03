@@ -124,7 +124,19 @@ APB Peripherals
 
 
 
+---
 
+## AHB Master (`ahb_master.v`)
+
+Behavioral model of an AHB master used for simulation only. 
+Not synthesizable. Implements four tasks:
+
+| Task | Description |
+|---|---|
+| `single_write` | Single beat write to address 0x8400_0000 |
+| `single_read` | Single beat read from address 0x8400_0000 |
+| `burst_incr4_write` | 4-beat incrementing burst write |
+| `burst_incr4_read` | 4-beat incrementing burst read |
 
 
 
