@@ -142,7 +142,21 @@ Not synthesizable. Implements four tasks:
 
 
 
+---
 
+## Testbench (`top_tb.v`)
+
+Instantiates all modules and runs four test scenarios 
+sequentially:
+
+| Test | Description |
+|---|---|
+| `single_write` | Writes 0x29 to address 0x8400_0000 |
+| `single_read` | Reads from address 0x8400_0000 |
+| `burst_incr4_write` | 4-beat burst write starting at 0x8400_0000 |
+| `burst_incr4_read` | 4-beat burst read starting at 0x8400_0000 |
+
+Clock period: 20ns. Reset applied for 2 cycles before each test.
 
 
 
