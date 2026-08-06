@@ -159,12 +159,24 @@ sequentially:
 Clock period: 20ns. Reset applied for 2 cycles before each test.
 
 
+---
 
+## Simulation Waveforms
 
+### AHB Slave Interface
 
+![AHB Slave Interface Waveform](ahb_waveform.png)
 
-
-
+Shows the 2-stage pipeline in action for a write to address 
+`0x8400_0000`. `haddr1` and `haddr2` each lag `haddr` by one 
+clock cycle, and `hwdata1`/`hwdata2` lag `hwdata` the same way — 
+by the second stage, address and data from the same transaction 
+line up. `valid` pulses high whenever `htrans` is `2` (NONSEQ) or 
+`3` (SEQ) and drops to `0` during `htrans = 0` (IDLE) gaps between 
+transfers. `tempselx` reads `2` (`3'b010`), confirming Slave 2 
+selection for the `0x84xx_xxxx` address range. The waveform covers 
+all four test cases run back to back: single write, single read, 
+burst write, and burst read.
 
 
 
