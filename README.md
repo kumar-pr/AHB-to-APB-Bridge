@@ -167,22 +167,36 @@ Clock period: 20ns. Reset applied for 2 cycles before each test.
 
 ![AHB Slave Interface Waveform](ahb_waveform.png)
 
-Shows the 2-stage pipeline in action for a write to address 
-`0x8400_0000`. `haddr1` and `haddr2` each lag `haddr` by one 
-clock cycle, and `hwdata1`/`hwdata2` lag `hwdata` the same way — 
-by the second stage, address and data from the same transaction 
-line up. `valid` pulses high whenever `htrans` is `2` (NONSEQ) or 
-`3` (SEQ) and drops to `0` during `htrans = 0` (IDLE) gaps between 
-transfers. `tempselx` reads `2` (`3'b010`), confirming Slave 2 
-selection for the `0x84xx_xxxx` address range. The waveform covers 
-all four test cases run back to back: single write, single read, 
-burst write, and burst read.
+Shows the 2-stage pipeline in action. `haddr1` and `haddr2` each 
+lag `haddr` by one clock cycle, and `hwdata1`/`hwdata2` lag 
+`hwdata` the same way — by the second stage, address and data 
+from the same transaction line up. `valid` pulses high whenever 
+`htrans` is `2` (NONSEQ) or `3` (SEQ) and drops to `0` during 
+`htrans = 0` (IDLE) gaps between transfers. `tempselx` reads `2` 
+(`3'b010`), confirming Slave 2 selection for the `0x84xx_xxxx` 
+address range. The waveform covers all four test cases run back 
+to back: single write, single read, burst write, and burst read.
 
 
+### APB Controller
 
+![APB Controller Waveform](apb_waveform.png)
 
+The `present` signal traces the FSM through all four tests. The 
+single write runs `idle(0) → wwait(3) → write(4) → wenable(5) → 
+idle(0)`. The single read runs `idle(0) → read(1) → renable(2) → 
+idle(0)`. The burst write enters the pipelined path — 
+`wwait(3) → writep(6) → wenablep(7) → writep(6) → wenablep(7) → 
+write(4) → wenable(5)` — using the `writep`/`wenablep` states to 
+overlap consecutive beats. The burst read loops 
+`read(1) → renable(2)` for each beat.
 
-
-
+`psel` holds `2` (Slave 2) whenever a transfer is active and 
+returns to `0` in `idle`, matching the `0x84xx_xxxx` address 
+range. `penable` pulses high for one cycle per beat — the APB 
+ENABLE phase — while `hreadyout` drops low during setup states, 
+stalling the AHB master until the APB side completes. `paddr` 
+tracks `haddr1` rather than `haddr` directly, so it reflects the 
+pipelined address one stage behind the master.
 
 
